@@ -1,5 +1,6 @@
 mod utils;
 
+use std::fmt;
 use wasm_bindgen::prelude::*;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -69,5 +70,19 @@ impl Universe {
             }
         }
         count
+    }
+}
+
+impl fmt::Display for Universe {
+    // セルの生死をUnicodeの幾何学模様で表す
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for line in self.cells.as_slice().chunks(self.width as usize) {
+            for &cell in line {
+                let symbol = if cell == Cell::Dead { '◻' } else { '◼' };
+                write!(f, "{}", symbol)?;
+            }
+            write!(f, "\n")?;
+        }
+        Ok(())
     }
 }
